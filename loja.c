@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 //Estruturas
 struct Loja {
@@ -10,7 +11,7 @@ struct Loja itens[100];
 int numItens = 0;
 
 struct ItemCarrinho {
-    char nome[50];
+    char nome[25];
     float preco;
     int quantidade;
 };
@@ -20,10 +21,10 @@ int numItensCarrinho = 0;
 //Funções
 void adicionar(struct Loja itens[100], int *numItens);
 void listar(struct Loja itens[100], int *numItens);
-int adicionarCarrinho(struct Loja itens[100], int *numItens);
-int remover(struct Loja itens[100], int *numItens);
-void listarCarrinho(struct Loja itens[100], int *numItens);
-void checkout(struct Loja itens[100], int *numItens);
+int adicionarCarrinho(struct Loja itens[100], struct ItemCarrinho carrinho[100], int *numItens, int *numItensCarrinho);
+int remover(struct ItemCarrinho carrinho[100], int *numItens, int *numItensCarrinho);
+void listarCarrinho(struct Loja itens[100], int *numItensCarrinho);
+void checkout(struct ItemCarrinho carrinho[100] ,int *numItensCarrinho);
 
 int main(void)
 {   
@@ -38,6 +39,7 @@ int main(void)
         printf("6. Checkout.\n");
         printf("7. Sair.\n");
         printf("O que faremos hoje? ");
+        scanf("%d", &escolha);
 
         switch (escolha)
         {
@@ -48,16 +50,16 @@ int main(void)
             listar(itens, numItens);
             break;
         case 3:
-            adicionarCarrinho(itens, numItens);
+            adicionarCarrinho(itens, carrinho, numItens, numItensCarrinho);
             break;
         case 4:
-            remover(itens, numItens);
+            remover(itens, numItens, numItensCarrinho);
             break;
         case 5:
             listarCarrinho(itens, numItens);
             break;
         case 6:
-            checkout(itens, numItens);
+            checkout(itens, numItensCarrinho);
             break;
         case 7:
             printf("Encerrando o programa...\n");
@@ -82,4 +84,42 @@ void adicionar(struct Loja itens[100], int *numItens) {
     scanf("%d", &itens[*numItens].quantidade);
     printf("\nProduto Adicionado com sucesso!\n");
     (*numItens)++;
+}
+
+void listar(struct Loja itens[100], int *numItens) {
+    printf("| %-15s | %-5f | %-5d \n", "Nome", "Preco", "Quantidade");
+    printf("---------------|--------|-----\n");
+    for (int i = 0; i < *numItens; i++) {
+        printf("| %-15s | %-5f | %-5d \n", itens[i].nome, itens[i].preco, itens[i].quantidade);
+         printf("---------------|--------|-----\n");
+    }
+}
+
+int adicionarCarrinho(struct Loja itens[100], struct ItemCarrinho carrinho[100], int *numItens, int *numItensCarrinho) {
+    char nome[25];
+    int quantidade;
+    printf("Qual produto deseja adicionar ao carrinho? ");
+    scanf("%s", nome);
+    for (int i = 0; i < *numItens; i++) {
+        if (strcmp(itens[i].nome, nome) == 0) {
+            printf("Qual a quantidade deseja adicionar? ");
+            scanf("%d", &quantidade);
+            if (itens[i].quantidade >= quantidade){
+                itens[i].quantidade -= quantidade;
+                strcpy(carrinho[*numItensCarrinho].nome, itens[i].nome);
+                carrinho[*numItensCarrinho].preco = itens[i].preco;
+                carrinho[*numItensCarrinho].quantidade = quantidade;
+                printf("Item adicionado ao carrinho.\n");
+                (*numItensCarrinho)++;
+                return 0;
+            }
+            else {
+                printf("Quantidade indisponivel!\n");
+                return -1;
+            }
+    }
+    }
+    printf("Produto nao encontrado!\n");
+    return -1;
+    
 }
