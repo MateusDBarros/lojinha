@@ -23,3 +23,8 @@ Este projeto implementa um simulador de loja virtual em linguagem C. Ele permite
 
 - **Checkout**:
   - Função: `checkout`.
+
+## Contato
+
+Para mais informações, entre em contato via [mb685212@gmail.com](mailto:mb685212@gmail.com) ou [linkedin](https://linkedin.com/in/mateus-barros13)
+
