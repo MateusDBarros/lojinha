@@ -23,7 +23,7 @@ void adicionar(struct Loja itens[100], int *numItens);
 void listar(struct Loja itens[100], int *numItens);
 void adicionarCarrinho(struct Loja itens[100], struct ItemCarrinho carrinho[100], int *numItens, int *numItensCarrinho);
 void remover(struct ItemCarrinho carrinho[100], int *numItensCarrinho);
-void listarCarrinho(struct Loja itens[100], int *numItensCarrinho);
+void listarCarrinho(struct ItemCarrinho carrinho[100], int *numItensCarrinho);
 void checkout(struct ItemCarrinho carrinho[100] ,int *numItensCarrinho);
 
 int main(void)
@@ -31,6 +31,7 @@ int main(void)
     int escolha;
     do
     {
+        printf("\n");
         printf("1. Adicionar Produto.\n");
         printf("2. Listar Produtos.\n");
         printf("3. Adicionar no Carrinho.\n");
@@ -44,22 +45,22 @@ int main(void)
         switch (escolha)
         {
         case 1:
-            adicionar(itens, numItens);
+            adicionar(itens, &numItens);
             break;
         case 2:
-            listar(itens, numItens);
+            listar(itens, &numItens);
             break;
         case 3:
-            adicionarCarrinho(itens, carrinho, numItens, numItensCarrinho);
+            adicionarCarrinho(itens, carrinho, &numItens, &numItensCarrinho);
             break;
         case 4:
-            remover(itens, numItensCarrinho);
+            remover(carrinho, &numItensCarrinho);
             break;
         case 5:
-            listarCarrinho(itens, numItens);
+            listarCarrinho(carrinho, &numItens);
             break;
         case 6:
-            checkout(itens, numItensCarrinho);
+            checkout(carrinho, &numItensCarrinho);
             break;
         case 7:
             printf("Encerrando o programa...\n");
@@ -88,7 +89,7 @@ void adicionar(struct Loja itens[100], int *numItens) {
 
 void listar(struct Loja itens[100], int *numItens) {
     if (*numItens == 0) {
-        printf("Sem itens no catalogo!");
+        printf("Sem itens no catalogo!\n");
         return;
     }
     printf("| %-15s | %-5f | %-5d \n", "Nome", "Preco", "Quantidade");
@@ -151,7 +152,7 @@ void remover(struct ItemCarrinho carrinho[100], int *numItensCarrinho) {
     return;
 }
 
-void listarCarrinho(struct Loja carrinho[100], int *numItensCarrinho) {
+void listarCarrinho(struct ItemCarrinho carrinho[100], int *numItensCarrinho) {
     if (*numItensCarrinho == 0) {
         printf("Sem itens no carrinho, Volte as compras!\n");
         return;
@@ -162,4 +163,29 @@ void listarCarrinho(struct Loja carrinho[100], int *numItensCarrinho) {
         printf("| %-15s | %-5f | %-5d \n", carrinho[i].nome, carrinho[i].preco, carrinho[i].quantidade);
          printf("---------------|--------|-----\n");
     }
+}
+
+void checkout(struct ItemCarrinho carrinho[100] ,int *numItensCarrinho) {
+    float desconto;
+    float total = 0.0;
+    for (int i = 0; i  < *numItensCarrinho; i++) {
+            total += carrinho[i].preco * carrinho[i].quantidade;
+    }
+    printf("Total da compra: %.2f \nchecando descontos...\n", total);
+    if (total >= 200){
+        desconto = total * (10.0 / 100);
+        total -= desconto;
+        printf("Desconto de: %.f aplicado\n", desconto);
+    }
+    else if (total >= 150)
+    {
+        desconto = total * (5.0 / 100);
+        total -= desconto;
+        printf("Desconto de: %.f aplicado\n", desconto);
+    }
+
+    printf("Valor da total da compra: %.2f\n", total);
+    printf("Compra finalizada com sucesso!\n");
+
+    *numItensCarrinho = 0;
 }
